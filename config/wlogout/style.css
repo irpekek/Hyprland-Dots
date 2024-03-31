@@ -6,7 +6,7 @@
 
 window {
     font-family: Fira Code Medium;
-    font-size: 16pt;
+    font-size: 0pt;
     color: #cdd6f4; /* text */
     background-color: rgba(30, 30, 46, 0.6);
 }
@@ -31,7 +31,7 @@ button:focus {
 button:hover {
     background-color: @color12; 
     color: #1e1e2e;
-    background-size: 50%;
+    background-size: 30%;
     margin: 30px;
     border-radius: 80px;
 	box-shadow: 0 0 30px @color7;
