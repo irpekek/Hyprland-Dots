@@ -3,8 +3,10 @@
 
 clear
 
-wallpaper=$HOME/Pictures/wallpapers/Fantasy-Landscape.png
-Waybar_Style="$HOME/.config/waybar/style/[Pywal] Chroma Tally.css"
+wallpaper=$HOME/Pictures/wallpapers/Lofi-Computer.png
+waybar_style="$HOME/.config/waybar/style/[Colored] Chroma Glow.css"
+waybar_config="$HOME/.config/waybar/configs/[TOP] Default_v3"
+waybar_config_laptop="$HOME/.config/waybar/configs/[TOP] Default Laptop_v3" 
 
 # Check if running as root. If root, script will exit
 if [[ $EUID -eq 0 ]]; then
@@ -113,6 +115,57 @@ done
 
 printf "\n"
 
+# Ask whether to change to 12hr format
+while true; do
+  echo -e "$ORANGE By default, configs are in 24H format."
+  read -p "$CAT Do you want to change to 12H format (AM/PM)? (y/n): " answer
+
+  # Convert the answer to lowercase for comparison
+  answer=$(echo "$answer" | tr '[:upper:]' '[:lower:]')
+
+  # Check if the answer is valid
+  if [[ "$answer" == "y" ]]; then
+    # Modify waybar config if 12hr is selected
+    sed -i 's/^    \/\/"format": " {:%I:%M %p}"/    "format": " {:%I:%M %p}"/' ./config/waybar/modules 2>&1 | tee -a "$LOG" || true
+    sed -i 's/^    "format": " {:%H:%M:%S}"/    \/\/"format": " {:%H:%M:%S}"/' ./config/waybar/modules 2>&1 | tee -a "$LOG" || true
+    
+    # for hyprlock
+    sed -i 's|^# text = cmd\[update:1000\] echo "<b><big> $(date +"%I:%M:%S %p") </big></b>" # AM/PM|text = cmd\[update:1000\] echo "<b><big> $(date +"%I:%M:%S %p") </big></b>" # AM/PM|' ./config/hypr/hyprlock.conf 
+    sed -i 's|^text = cmd\[update:1000\] echo "<b><big> $(date +"%H:%M:%S") </big></b>" # 24H|# text = cmd\[update:1000\] echo "<b><big> $(date +"%H:%M:%S") </big></b>" # 24H|' ./config/hypr/hyprlock.conf
+
+    # for SDDM (simple-sddm)
+    sddm_folder="/usr/share/sddm/themes/simple-sddm"
+    if [ -d "$sddm_folder" ]; then
+      echo "Simple sddm exists. Editing to 12H format" 2>&1 | tee -a "$LOG"
+
+      sudo sed -i 's|^## HourFormat="hh:mm AP"|HourFormat="hh:mm AP"|' "$sddm_folder/theme.conf" 2>&1 | tee -a "$LOG" || true
+      sudo sed -i 's|^HourFormat="HH:mm"|## HourFormat="HH:mm"|' "$sddm_folder/theme.conf" 2>&1 | tee -a "$LOG" || true
+
+      echo "12H format set to SDDM theme successfully." 2>&1 | tee -a "$LOG"
+    fi
+
+        # for SDDM (simple-sddm-2)
+    sddm_folder_2="/usr/share/sddm/themes/simple-sddm-2"
+    if [ -d "$sddm_folder_2" ]; then
+      echo "Simple sddm 2 exists. Editing to 12H format" 2>&1 | tee -a "$LOG"
+
+      sudo sed -i 's|^## HourFormat="hh:mm AP"|HourFormat="hh:mm AP"|' "$sddm_folder_2/theme.conf" 2>&1 | tee -a "$LOG" || true
+      sudo sed -i 's|^HourFormat="HH:mm"|## HourFormat="HH:mm"|' "$sddm_folder_2/theme.conf" 2>&1 | tee -a "$LOG" || true
+
+      echo "12H format set to SDDM theme successfully." 2>&1 | tee -a "$LOG"
+    fi
+
+    break
+  elif [[ "$answer" == "n" ]]; then
+    echo "You chose not to change to 12H format." 2>&1 | tee -a "$LOG"
+    break
+  else
+    echo "Invalid choice. Please enter y for yes or n for no."
+  fi
+done
+
+printf "\n"
+
 # Action to do for better rofi appearance
 while true; do
     echo "$ORANGE Select monitor resolution for better Rofi appearance:"
@@ -158,7 +211,7 @@ get_backup_dirname() {
   echo "back-up_${timestamp}"
 }
 
-for DIR in btop cava hypr kitty Kvantum qt5ct qt6ct rofi swappy swaync swaylock wal waybar wlogout; do 
+for DIR in ags btop cava fastfetch hypr kitty Kvantum qt5ct qt6ct rofi swappy swaync wallust waybar wlogout; do 
   DIRPATH=~/.config/"$DIR"
   if [ -d "$DIRPATH" ]; then 
     echo -e "${NOTE} - Config for $DIR found, attempting to back up."
@@ -193,27 +246,27 @@ chmod +x ~/.config/hypr/scripts/* 2>&1 | tee -a "$LOG"
 chmod +x ~/.config/hypr/UserScripts/* 2>&1 | tee -a "$LOG"
 # Set executable for initial-boot.sh
 chmod +x ~/.config/hypr/initial-boot.sh 2>&1 | tee -a "$LOG"
-printf "\n%.0s" {1..3}
+printf "\n%.0s" {1..2}
 
-# Detect machine type and set Waybar configurations accordingly, logging the output
+# Detect machine type and set Waybar configurations accordingly
 if hostnamectl | grep -q 'Chassis: desktop'; then
     # Configurations for a desktop
-    ln -sf "$HOME/.config/waybar/configs/[TOP] Default" "$HOME/.config/waybar/config" 2>&1 | tee -a "$LOG"
+    ln -sf "$waybar_config" "$HOME/.config/waybar/config" 2>&1 | tee -a "$LOG"
     rm -r "$HOME/.config/waybar/configs/[TOP] Default Laptop" "$HOME/.config/waybar/configs/[BOT] Default Laptop" 2>&1 | tee -a "$LOG"
+    rm -r "$HOME/.config/waybar/configs/[TOP] Default Laptop_v2" "$HOME/.config/waybar/configs/[TOP] Default Laptop_v3" 2>&1 | tee -a "$LOG"
 else
     # Configurations for a laptop or any system other than desktop
-    ln -sf "$HOME/.config/waybar/configs/[TOP] Default Laptop" "$HOME/.config/waybar/config" 2>&1 | tee -a "$LOG"
+    ln -sf "$waybar_config_laptop" "$HOME/.config/waybar/config" 2>&1 | tee -a "$LOG"
     rm -r "$HOME/.config/waybar/configs/[TOP] Default" "$HOME/.config/waybar/configs/[BOT] Default" 2>&1 | tee -a "$LOG"
+    rm -r "$HOME/.config/waybar/configs/[TOP] Default_v2" "$HOME/.config/waybar/configs/[TOP] Default_v3" 2>&1 | tee -a "$LOG"
 fi
-
-printf "\n%.0s" {1..3}
 
 # additional wallpapers
 echo "$(tput setaf 6) By default only a few wallpapers are copied...$(tput sgr0)"
 printf "\n%.0s" {1..2}
 
 while true; do
-    read -rp "${CAT} Would you like to download additional wallpapers? (y/n)" WALL
+    read -rp "${CAT} Would you like to download additional wallpapers? Warning! This is more than >600mb (y/n)" WALL
     case $WALL in
         [Yy])
             echo "${NOTE} Downloading additional wallpapers..."
@@ -242,13 +295,10 @@ while true; do
 done
 
 # symlinks for waybar style
-ln -sf "$Waybar_Style" "$HOME/.config/waybar/style.css" && \
+ln -sf "$waybar_style" "$HOME/.config/waybar/style.css" && \
 
-# initialize pywal to avoid config error on hyprland
-wal -i $wallpaper -s -t 2>&1 | tee -a "$LOG"
-
-#initial symlink for Pywal Dark and Light for Rofi Themes
-ln -sf "$HOME/.cache/wal/colors-rofi-dark.rasi" "$HOME/.config/rofi/pywal-color/pywal-theme.rasi"
+# initialize wallust to avoid config error on hyprland
+wallust run -s $wallpaper 2>&1 | tee -a "$LOG"
 
 
 printf "\n%.0s" {1..2}
