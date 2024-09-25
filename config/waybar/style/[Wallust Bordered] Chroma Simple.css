@@ -1,5 +1,5 @@
 /* ----------- 💫 https://github.com/JaKooLit 💫 -------- */
-/* Wallust Bordered*/
+/* Wallust Bordered - Chroma Simple */
 
 @import '../../.config/waybar/wallust/colors-waybar.css';
 
@@ -19,11 +19,11 @@ window#waybar {
     padding-right: 15px;
 }
 
+window#waybar.empty,
 window#waybar.empty #window {
     background-color: transparent;
-    border-color: transparent;
-    padding-left: 15px;
-    padding-right: 15px;
+    padding: 0px;
+    border: 0px;
 }
 
 tooltip {
@@ -91,6 +91,7 @@ tooltip {
 #keyboard-state,
 #memory,
 #mode,
+#mpris,
 #network,
 #power-profiles-daemon,
 #pulseaudio,
@@ -101,16 +102,23 @@ tooltip {
 #window,
 #wireplumber,
 #custom-backlight,
+#custom-browser,
 #custom-cava_mviz,
 #custom-cycle_wall,
-#custom-hint,
+#custom-file_manager,
+#custom-keybinds,
 #custom-keyboard,
 #custom-light_dark,
 #custom-lock,
+#custom-hint,
+#custom-hypridle,
 #custom-menu,
 #custom-power_vertical,
 #custom-power,
+#custom-settings,
+#custom-spotify,
 #custom-swaync,
+#custom-tty,
 #custom-updater,
 #custom-weather,
 #custom-weather.clearNight,
@@ -181,7 +189,7 @@ tooltip {
 }
 
 #mpris {
-    padding-left: 15px;	
+    padding-left: 16px;	
 }
 #tray.empty {
     background-color: transparent;
@@ -224,9 +232,10 @@ tooltip {
 	border: 2px solid @color14;
 }
 
+/*-----Indicators----*/
+#custom-hypridle.notactive,
 #idle_inhibitor.activated {
-	color: @color12;
-	border: 2px solid @color12;
+	color: #39FF14;
 }
 
 #battery.good {
