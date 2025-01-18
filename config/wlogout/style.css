@@ -8,39 +8,34 @@ window {
     font-family: Fira Code Medium;
     font-size: 0pt;
     color: #cdd6f4; /* text */
-    background-color: rgba(30, 30, 46, 0.6);
+    background-color: rgba(30, 30, 46, 0.748);
 }
 
 button {
     background-repeat: no-repeat;
     background-position: center;
-    background-size: 20%;
+    background-size: 25%;
     background-color: rgba(200, 220, 255, 0);
     animation: gradient_f 10s ease-in infinite;
     transition: all 0.3s cubic-bezier(.55, 0.0, .28, 1.682), box-shadow 0.2s ease-in-out, background-color 0.2s ease-in-out;
     border-radius: 80px;
 	border:0px;
+    padding-top: 100px;
+    padding-bottom: 100px;
 }
 
 button:focus {
-    background-size: 50%;
-	border: 0px;
-
+    background-size: 40%;
+	border: 2px solid @color13;
 }
 
 button:hover {
-    background-color: @color12; 
+    background-color: @color13; 
     color: #1e1e2e;
     background-size: 30%;
     margin: 30px;
     border-radius: 80px;
 	box-shadow: 0 0 30px @color7;
-	
-}
-
-/* Adjust the size of the icon or content inside the button */
-button span {
-    font-size: 1.2em; /* Increase the font size */
 }
 
 
