@@ -164,7 +164,7 @@
 		"class<Chromium|Thorium>": " ",
 		"class<org.telegram.desktop|io.github.tdesktop_x64.TDesktop>": " ",
 		"class<[Ss]potify>": " ",
-		"class<VSCode|code-url-handler|code-oss|codium|codium-url-handler|VSCodium>": "󰨞 ",
+		"class<VSCode|code-url-handler|code-oss|codium|codium-url-handler|VSCodium|[Cc]ode>": "󰨞 ",
 		"class<thunar>": "󰝰 ",
 		"class<[Tt]hunderbird|[Tt]hunderbird-esr>": " ",
 		"class<eu.betterbird.Betterbird>": " ",
@@ -185,6 +185,7 @@
 		"class<zen-alpha>": "󰰷 ", //Zen Browser
 		"class<waterfox|waterfox-bin>": " ",
 		"class<microsoft-edge>": " ",
+		"class<[Bb]rave-browser>": " ",
 		"class<vlc>": "󰕼 "
 		}   
 	},
