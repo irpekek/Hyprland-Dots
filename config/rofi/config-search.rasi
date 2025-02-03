@@ -1,7 +1,7 @@
 /* ---- 💫 https://github.com/JaKooLit 💫 ---- */
 /* Rofi Config for Google Search) */
 
-@import "~/.config/rofi/master-config.rasi"  
+@import "~/.config/rofi/master-config.rasi"
 
 /* ---- Window ---- */
 window {
@@ -21,7 +21,7 @@ mainbox {
     children: [ "entry"];
 }
 
-/* ---- Entry ---- */ 
+/* ---- Entry ---- */
 entry {
 	placeholder: "✨ Type to reveal knowledge...";
 }
