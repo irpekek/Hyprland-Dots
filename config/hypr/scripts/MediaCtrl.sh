@@ -32,6 +32,7 @@ stop_playback() {
 show_music_notification() {
     status=$(playerctl status)
     if [[ "$status" == "Playing" ]]; then
+        sleep 2
         song_title=$(playerctl metadata title)
         song_artist=$(playerctl metadata artist)
         notify-send -e -u low -i "$music_icon" " Now Playing:" " $song_title by $song_artist"
