@@ -10,7 +10,7 @@
 # Variables
 scriptsDir=$HOME/.config/hypr/scripts
 wallpaper=$HOME/.config/hypr/wallpaper_effects/.wallpaper_modified
-waybar_style="$HOME/.config/waybar/style/[Dark] Latte-Wallust combined.css"
+waybar_style="$HOME/.config/waybar/style/[WALLUST] ML4W-modern.css"
 kvantum_theme="catppuccin-mocha-blue"
 color_scheme="prefer-dark"
 gtk_theme="Flat-Remix-GTK-Blue-Dark"
@@ -25,18 +25,18 @@ if [ ! -f ~/.config/hypr/.initial_startup_done ]; then
     sleep 1
     # Initialize wallust and wallpaper
 	if [ -f "$wallpaper" ]; then
-		wallust run -s $wallpaper > /dev/null 
+		wallust run -s $wallpaper > /dev/null
 		swww query || swww-daemon && $swww $wallpaper $effect
-	    "$scriptsDir/WallustSwww.sh" > /dev/null 2>&1 & 
+	    "$scriptsDir/WallustSwww.sh" > /dev/null 2>&1 &
 	fi
-     
+
     # initiate GTK dark mode and apply icon and cursor theme
     gsettings set org.gnome.desktop.interface color-scheme $color_scheme > /dev/null 2>&1 &
     gsettings set org.gnome.desktop.interface gtk-theme $gtk_theme > /dev/null 2>&1 &
     gsettings set org.gnome.desktop.interface icon-theme $icon_theme > /dev/null 2>&1 &
     gsettings set org.gnome.desktop.interface cursor-theme $cursor_theme > /dev/null 2>&1 &
     gsettings set org.gnome.desktop.interface cursor-size 24 > /dev/null 2>&1 &
-    
+
     # initiate kvantum theme
     kvantummanager --set "$kvantum_theme" > /dev/null 2>&1 &
 
@@ -47,8 +47,8 @@ if [ ! -f ~/.config/hypr/.initial_startup_done ]; then
 	if [ -f "$waybar_style" ]; then
     	ln -sf "$waybar_style" "$HOME/.config/waybar/style.css"
 
-		# Refreshing waybar, swaync, rofi etc. 
-		"$scriptsDir/Refresh.sh" > /dev/null 2>&1 & 
+		# Refreshing waybar, swaync, rofi etc.
+		"$scriptsDir/Refresh.sh" > /dev/null 2>&1 &
 	fi
 
     # Create a marker file to indicate that the script has been executed.
