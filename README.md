@@ -37,18 +37,7 @@ https://github.com/user-attachments/assets/49bc12b2-abaf-45de-a21c-67aacd9bb872
 </div>
 
 #### 📹 A video walkthroughs
-<details>
-  <summary>YT Videos</summary>
-
-- [Walkthough](https://youtu.be/fO-RBHvVEcc)
-
-- [V1-Changes](https://youtu.be/upDl1ns05eg)
-
-- [v2-Changes](https://youtu.be/yaVurRoXc-s)
-
-#### 📽️ A video coverage by other users. Pls watch and subscribe to their channel
-- [`Link`](https://github.com/JaKooLit/Hyprland-Dots/wiki/Videos_and_Reviews)
-
+- at the bottom
 
 #### 🎞️ AGS Overview DEMO
 - in case you wonder, here is a short demo of AGS overview [Youtube LINK](https://youtu.be/zY5SLNPBJTs)
@@ -85,6 +74,9 @@ https://github.com/user-attachments/assets/49bc12b2-abaf-45de-a21c-67aacd9bb872
 ### 📦 Whats new?
 - To easily track changes, I will be updating the [CHANGELOGS](https://github.com/JaKooLit/Hyprland-Dots/wiki/Changelogs)  Screenshots will be included if worth mentioning the changes!
 
+> [!NOTE]
+> Kindly note that by defeault, Kools Dots are adjusted / configured for 2k (1440p) display without scaling. 
+
 ### 💥 Copying / Installation / Update instructions 💥
 - [`MORE INFO HERE`](https://github.com/JaKooLit/Hyprland-Dots/wiki/Install_&_Update) 
 > [!Note] 
@@ -103,13 +95,13 @@ git clone --depth=1 https://github.com/JaKooLit/Hyprland-Dots.git -b development
 cd Hyprland-Dots
 ```
 
-- automatic copy/install of pre-configured dots
+- automatic copy/install of pre-configured dots (recommended for updating)
 ```bash
 chmod +x copy.sh
 ./copy.sh
 ```
 
-- to copy/install from releases (stable)
+- to copy/install from releases (stable) (note this is 1 version older than in main)
 ```bash
 chmod +x release.sh
 ./release.sh
@@ -124,10 +116,14 @@ chmod +x upgrade.sh
 ./upgrade.sh
 ```
 
-## ⚠️⚠️⚠️ ATTENTION - BACKUPS CREATED by SCRIPT
+## ❗❗❗ DEBIAN AND UBUNTU HEADS UP!
+- I am getting ridiculously amount of messages for updating your KooL Hyprland dotfiles. I have made a BIG note on [`WIKI`](https://github.com/JaKooLit/Hyprland-Dots/wiki/Install_&_Update)
+
+
+#### ⚠️⚠️⚠️ ATTENTION - BACKUPS CREATED by SCRIPT
 > [!CAUTION]
 > copy.sh, release.sh and even upgrade.sh creates a backup!
-> Kindly investigate manually contents on your ~/.config
+> Kindly investigate manually contents on your $HOME/.config
 > Delete manually all the backups which you dont need
 
 #### 🛎️ a small note on wallpapers
@@ -181,6 +177,9 @@ chmod +x upgrade.sh
 
 [!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/JaKooLit)
 
+
+####  📹 Youtube videos (Click to view and watch the playlist) 📹
+[![Youtube Playlist Thumbnail](https://raw.githubusercontent.com/JaKooLit/screenshots/main/Youtube.png)](https://youtube.com/playlist?list=PLDtGd5Fw5_GjXCznR0BzCJJDIQSZJRbxx&si=iaNjLulFdsZ6AV-t)
 
                         
 ## 🫰	Thank you for the stars 🩷

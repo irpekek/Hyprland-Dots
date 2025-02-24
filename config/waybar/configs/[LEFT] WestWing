@@ -1,6 +1,6 @@
 /* ---- 💫 https://github.com/JaKooLit 💫 ---- */
 
-// ### RIGHT PANEL ### //
+// ### LEFT PANEL ### //
 
 {
 "include": [
@@ -11,18 +11,18 @@
   "$HOME/.config/waybar/ModulesVertical",
   ],
 "layer": "top",
-"position": "right",
+"position": "left",
 "margin-top": 8,
 "margin-bottom": 8,
-//"margin-left": 3,
-"margin-right": 3,
+"margin-left": 3,
+//"margin-right": 3,
 "spacing": 3,
 "fixed-center": true,
 "ipc": true,
 //"gtk-layer-shell": true,
-	
+  
 "modules-left": [
-	"clock#vertical",
+    "clock#vertical",
 	"custom/light_dark",
 ],
 
@@ -33,7 +33,7 @@
 "modules-right": [
 	"mpris",
 	"tray",
-	"custom/swaync",
+	"group/notify",
 	"backlight#vertical",
 	"pulseaudio#microphone_vertical",
 	"pulseaudio#vertical",

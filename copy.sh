@@ -30,15 +30,46 @@ if [[ $EUID -eq 0 ]]; then
     printf "\n%.0s" {1..2} 
     exit 1
 fi
-  
-printf "\n%.0s" {1..2}  
+
+# Function to print colorful text
+print_color() {
+    printf "%b%s%b\n" "$1" "$2" "$CLEAR"
+}
+
+# Check /etc/os-release to see if this is an Ubuntu or Debian based distro
+if grep -iq '^\(ID_LIKE\|ID\)=.*\(debian\|ubuntu\)' /etc/os-release >/dev/null 2>&1; then
+	printf "\n%.0s" {1..1}
+    print_color $WARNING "
+    █▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀█
+                 KOOL DOTS version INCOMPATIBLE
+    █▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄█
+
+    Debian / Ubuntu detected. Refer to Hyprland-Dots README
+    For instruction on how to update your KooL Hyprland Dots
+
+    exiting ....
+    "
+  printf "\n%.0s" {1..3}
+  exit 1
+fi
+
+
+printf "\n%.0s" {1..1}  
 echo -e "\e[35m
-  ╦╔═┌─┐┌─┐╦    ╔╦╗┌─┐┌┬┐┌─┐
-  ╠╩╗│ ││ │║     ║║│ │ │ └─┐ 2025
-  ╩ ╩└─┘└─┘╩═╝  ═╩╝└─┘ ┴ └─┘
+    ╦╔═┌─┐┌─┐╦    ╔╦╗┌─┐┌┬┐┌─┐
+    ╠╩╗│ ││ │║     ║║│ │ │ └─┐ 2025
+    ╩ ╩└─┘└─┘╩═╝  ═╩╝└─┘ ┴ └─┘
 \e[0m"
 printf "\n%.0s" {1..1}  
- 
+
+####### Announcement
+echo "${WARNING}A T T E N T I O N !${RESET}"
+echo "${SKY_BLUE}This version (v2.3.12) requires nwg-displays and some fonts!${RESET}"
+echo "${SKY_BLUE}If you ran through (Distro-Hyprland install scripts), no need to do anything${RESET}"
+echo "${YELLOW}previous version: Some Keybinds changes${RESET}"
+echo "${MAGENTA}Kindly visit KooL Hyprland Own Wiki for changelogs${RESET}"
+printf "\n%.0s" {1..1}
+
 # Create Directory for Copy Logs
 if [ ! -d Copy-Logs ]; then
     mkdir Copy-Logs
@@ -62,7 +93,7 @@ if lspci -k | grep -A 2 -E "(VGA|3D)" | grep -iq nvidia; then
   sed -i '/env = __GLX_VENDOR_LIBRARY_NAME,nvidia/s/^#//' config/hypr/UserConfigs/ENVariables.conf
   sed -i '/env = NVD_BACKEND,direct/s/^#//' config/hypr/UserConfigs/ENVariables.conf
   # enabling no hardware cursors if nvidia detected
-  sed -i 's/^\([[:space:]]*no_hardware_cursors[[:space:]]*=[[:space:]]*\)2/\1true/' config/hypr/UserConfigs/UserSettings.conf  
+  sed -i 's/^\([[:space:]]*no_hardware_cursors[[:space:]]*=[[:space:]]*\)false/\1true/' config/hypr/UserConfigs/UserSettings.conf  
   # disabling explicit sync for nvidia for now (Hyprland 0.42.0)
   #sed -i 's/  explicit_sync = 2/  explicit_sync = 0/' config/hypr/UserConfigs/UserSettings.conf
 fi
@@ -71,10 +102,10 @@ fi
 if hostnamectl | grep -q 'Chassis: vm'; then
   echo "${INFO} System is running in a virtual machine. Setting up proper env's and configs" 2>&1 | tee -a "$LOG" || true
   # enabling proper ENV's for Virtual Environment which should help
-  sed -i 's/^\([[:space:]]*no_hardware_cursors[[:space:]]*=[[:space:]]*\)2/\1true/' config/hypr/UserConfigs/UserSettings.conf
+  sed -i 's/^\([[:space:]]*no_hardware_cursors[[:space:]]*=[[:space:]]*\)false/\1true/' config/hypr/UserConfigs/UserSettings.conf
   sed -i '/env = WLR_RENDERER_ALLOW_SOFTWARE,1/s/^#//' config/hypr/UserConfigs/ENVariables.conf
   #sed -i '/env = LIBGL_ALWAYS_SOFTWARE,1/s/^#//' config/hypr/UserConfigs/ENVariables.conf
-  sed -i '/monitor = Virtual-1, 1920x1080@60,auto,1/s/^#//' config/hypr/UserConfigs/Monitors.conf
+  sed -i '/monitor = Virtual-1, 1920x1080@60,auto,1/s/^#//' config/hypr/monitors.conf
 fi
 
 # Proper Polkit for NixOS
@@ -84,8 +115,8 @@ if hostnamectl | grep -q 'Operating System: NixOS'; then
   sed -i '/^exec-once = \$scriptsDir\/Polkit\.sh$/ s/^#*/#/' config/hypr/UserConfigs/Startup_Apps.conf
 fi
 
-# Check if dpkg is installed (use to check if Debian or Ubuntu or based distros
-if command -v dpkg &> /dev/null; then
+# to check if Debian or Ubuntu or based distros
+if grep -iq '^\(ID_LIKE\|ID\)=.*\(debian\|ubuntu\)' /etc/os-release >/dev/null 2>&1; then
 	echo "${INFO} Debian/Ubuntu based distro. Disabling pyprland since it does not work properly" 2>&1 | tee -a "$LOG" || true
   # disabling pyprland as causing issues
   sed -i '/^exec-once = pypr &/ s/^/#/' config/hypr/UserConfigs/Startup_Apps.conf
@@ -98,6 +129,8 @@ if [ -d "$HOME/.icons/Bibata-Modern-Ice/hyprcursors" ]; then
     sed -i 's/^#env = HYPRCURSOR_THEME,Bibata-Modern-Ice/env = HYPRCURSOR_THEME,Bibata-Modern-Ice/' "$HYPRCURSOR_ENV_FILE"
     sed -i 's/^#env = HYPRCURSOR_SIZE,24/env = HYPRCURSOR_SIZE,24/' "$HYPRCURSOR_ENV_FILE"
 fi
+
+printf "\n%.0s" {1..1} 
 
 # Function to detect keyboard layout using localectl or setxkbmap
 detect_layout() {
@@ -134,6 +167,7 @@ You need to set it Manually
 
 Setting a wrong Keyboard Layout will cause Hyprland to crash
 If you are not sure, just type ${YELLOW}us${RESET}
+${SKYBLUE}You can change later in ~/.config/hypr/UserConfigs/UserSettings.conf${RESET}
 
 ${MAGENTA} NOTE:${RESET}
 •  You can also set more than 2 keyboard layouts
@@ -151,7 +185,7 @@ ${MAGENTA} NOTE:${RESET}
   done
 fi
 
-printf "${NOTE} Detecting keyboard layout to prepare proper Hyprland Settings\n\n"
+printf "${NOTE} Detecting keyboard layout to prepare proper Hyprland Settings\n"
 
 # Prompt the user to confirm whether the detected layout is correct
 while true; do
@@ -181,6 +215,7 @@ You need to set it Manually
 
 Setting a wrong Keyboard Layout will cause Hyprland to crash
 If you are not sure, just type ${YELLOW}us${RESET}
+${SKYBLUE}You can change later in ~/.config/hypr/UserConfigs/UserSettings.conf${RESET}
 
 ${MAGENTA} NOTE:${RESET}
 •  You can also set more than 2 keyboard layouts
@@ -198,8 +233,6 @@ ${MAGENTA} NOTE:${RESET}
         echo "${ERROR} Please enter either 'y' or 'n'." ;;
   esac
 done
-
-printf "\n%.0s" {1..1}
 
 # Check if asusctl is installed and add rog-control-center on Startup
 if command -v asusctl >/dev/null 2>&1; then
@@ -257,11 +290,14 @@ fi
 
 printf "\n"
 
-# Action to do for better rofi and kitty appearance
+# Action to do for better appearance
 while true; do
-  echo "$MAGENTA Select monitor resolution to properly configure appearance and fonts:"
-  echo "$YELLOW   -- Enter 1. for monitor res 1440p or less (< 1440p)"
-  echo "$YELLOW   -- Enter 2. for monitors res higher than 1440p (≥ 1440p)"
+  echo "${NOTE} ${SKY_BLUE} By default, KooL's Dots are configured for 1440p or 2k."
+  echo "${WARN} If you dont select proper resolution, Hyprlock will look FUNKY!"
+  echo "${INFO} If you are not sure what is your resolution, choose 1 here!"
+  echo "${MAGENTA}Select monitor resolution to properly configure appearance and fonts:"
+  echo "$YELLOW  -- Enter 1. for monitor resolution less than 1440p (< 1440p)"
+  echo "$YELLOW  -- Enter 2. for monitor resolution equal to or higher than 1440p (≥ 1440p)"
   read -p "$CAT Enter the number of your choice (1 or 2): " res_choice
 
   case $res_choice in
@@ -284,22 +320,37 @@ echo "${OK} You have chosen $resolution resolution." 2>&1 | tee -a "$LOG"
 
 # Add your commands based on the resolution choice
 if [ "$resolution" == "< 1440p" ]; then
-  cp -r config/rofi/resolution/1080p/* config/rofi/
-  sed -i 's/font_size 16.0/font_size 12.0/' config/kitty/kitty.conf
+  #cp -r config/rofi/resolution/1080p/* config/rofi/ 10-Feb-2025
+  sed -i 's/font_size 16.0/font_size 14.0/' config/kitty/kitty.conf
 
   # hyprlock matters
   mv config/hypr/hyprlock.conf config/hypr/hyprlock-2k.conf &&
   mv config/hypr/hyprlock-1080p.conf config/hypr/hyprlock.conf
 
-elif [ "$resolution" == "≥ 1440p" ]; then
-  cp -r config/rofi/resolution/1440p/* config/rofi/
+  # rofi fonts reduction
+  themes_dir="config/rofi/themes"
+  config_file="config/rofi/config.rasi"
+
+  # Change rofi font size
+  find "$themes_dir" -type f | while read -r file; do
+      if grep -Pzoq 'element-text {\n  font: "JetBrainsMono Nerd Font SemiBold 13";\n}' "$file"; then
+          sed -i 's/font: "JetBrainsMono Nerd Font SemiBold 13"/font: "JetBrainsMono Nerd Font SemiBold 11"/' "$file"
+      fi
+  done
+
+  # Change rofi font size in ~/.config/rofi/config.rasi
+  if [ -f "$config_file" ]; then
+      if grep -Pzoq 'configuration {\n  font: "JetBrainsMono Nerd Font SemiBold 13";\n}' "$config_file"; then
+          sed -i 's/font: "JetBrainsMono Nerd Font SemiBold 13"/font: "JetBrainsMono Nerd Font SemiBold 12"/' "$config_file"
+      fi
+  fi
 fi
 
-printf "\n"
+printf "\n%.0s" {1..1}
 
 # Ask whether to change to 12hr format
 while true; do
-    echo -e "$MAGENTA By default, KooL's Dots are configured in 24H clock format."
+    echo -e "${NOTE} ${SKY_BLUE} By default, KooL's Dots are configured in 24H clock format."
     read -p "$CAT Do you want to change to 12H format or AM/PM format? (y/n): " answer
 
     # Convert the answer to lowercase for comparison
@@ -370,8 +421,7 @@ while true; do
       fi
 
     break
- 
-
+     
     elif [[ "$answer" == "n" ]]; then
         echo "${NOTE} You chose not to change to 12H format." 2>&1 | tee -a "$LOG"
         break  # Exit the loop if the user chooses "n"
@@ -379,26 +429,24 @@ while true; do
         echo "${ERROR} Invalid choice. Please enter y for yes or n for no."
     fi
 done
-
-
-printf "\n"
+printf "\n%.0s" {1..1}
 
 # Check if the user wants to disable Rainbow borders
-printf "${MAGENTA} By default, Rainbow Borders animation is enabled.\n"
-printf "${WARN} - However, this uses a bit more CPU and Memory resources.\n"
+echo "${NOTE} ${SKY_BLUE}By default, Rainbow Borders animation is enabled"
+echo "${WARN} However, this uses a bit more CPU and Memory resources."
 
 read -p "${CAT} Do you want to disable Rainbow Borders animation? (y/N): " border_choice
 if [[ "$border_choice" =~ ^[Yy]$ ]]; then
     mv config/hypr/UserScripts/RainbowBorders.sh config/hypr/UserScripts/RainbowBorders.bak.sh
     
     sed -i '/exec-once = \$UserScripts\/RainbowBorders.sh \&/s/^/#/' config/hypr/UserConfigs/Startup_Apps.conf
-    sed -i '/  animation = borderangle, 1, 180, liner, loop/s/^/#/' config/hypr/UserConfigs/UserAnimations.conf
+    sed -i '/^[[:space:]]*animation = borderangle, 1, 180, liner, loop/s/^/#/' config/hypr/UserConfigs/UserAnimations.conf
     
     echo "${OK} Rainbow borders is now disabled." 2>&1 | tee -a "$LOG"
 else
     echo "${NOTE} No changes made. Rainbow borders remain enabled." 2>&1 | tee -a "$LOG"
 fi
-printf "\n"
+printf "\n%.0s" {1..1}
 
 set -e
 
@@ -411,22 +459,16 @@ get_backup_dirname() {
 
 # Check if the ~/.config/ directory exists
 if [ ! -d "$HOME/.config" ]; then
-  echo "${ERROR} - The ~/.config directory does not exist."
-  exit 1
+  echo "${ERROR} - $HOME/.config directory does not exist. Creating it now."
+  mkdir -p "$HOME/.config" && echo "Directory created successfully." || echo "Failed to create directory."
 fi
 
 printf "${INFO} - copying dotfiles ${SKY_BLUE}first${RESET} part\n"
 # Config directories which will ask the user whether to replace or not
-DIRS="
-  ags 
-  fastfetch 
-  kitty 
-  rofi 
-  swaync 
-  waybar
-"
+DIRS="ags fastfetch kitty rofi swaync"
+
 for DIR2 in $DIRS; do
-  DIRPATH=~/.config/"$DIR2"
+  DIRPATH="$HOME/.config/$DIR2"
   
   if [ -d "$DIRPATH" ]; then
     while true; do
@@ -435,27 +477,29 @@ for DIR2 in $DIRS; do
       case "$DIR1_CHOICE" in
         [Yy]* )
           BACKUP_DIR=$(get_backup_dirname)
-          
+          # Backup the existing directory
           mv "$DIRPATH" "$DIRPATH-backup-$BACKUP_DIR" 2>&1 | tee -a "$LOG"
-          if [ $? -eq 0 ]; then
-            echo -e "${NOTE} - Backed up $DIR2 to $DIRPATH-backup-$BACKUP_DIR." 2>&1 | tee -a "$LOG"
-            
-            cp -r config/"$DIR2" ~/.config/"$DIR2"
-            if [ $? -eq 0 ]; then
-              echo -e "${OK} - Replaced $DIR2 with new configuration." 2>&1 | tee -a "$LOG"
-            else
-              echo "${ERROR} - Failed to copy $DIR2." 2>&1 | tee -a "$LOG"
-              exit 1
+          echo -e "${NOTE} - Backed up $DIR2 to $DIRPATH-backup-$BACKUP_DIR." 2>&1 | tee -a "$LOG"
+
+          # Copy the new config
+          cp -r "config/$DIR2" "$HOME/.config/$DIR2" 2>&1 | tee -a "$LOG"
+          echo -e "${OK} - Replaced $DIR2 with new configuration." 2>&1 | tee -a "$LOG"
+         
+          # Restoring rofi themes directory unique themes
+          if [ "$DIR2" = "rofi" ]; then
+            if [ -d "$DIRPATH-backup-$BACKUP_DIR/themes" ]; then
+              for file in "$DIRPATH-backup-$BACKUP_DIR/themes"/*; do
+                [ -e "$file" ] || continue  # Skip if no files are found
+                echo "Copying $file to $HOME/.config/rofi/themes/" >> "$LOG"
+                cp -n "$file" "$HOME/.config/rofi/themes/"
+              done || true
             fi
-          else
-            echo "${ERROR} - Failed to back up $DIR2." 2>&1 | tee -a "$LOG"
-            exit 1
           fi
+
           break
           ;;
         [Nn]* )
-          # Skip the directory
-          echo -e "${NOTE} - Skipping ${YELLOW}$DIR2${RESET} " 2>&1 | tee -a "$LOG"
+          echo -e "${NOTE} - Skipping ${YELLOW}$DIR2${RESET}" 2>&1 | tee -a "$LOG"
           break
           ;;
         * )
@@ -465,15 +509,71 @@ for DIR2 in $DIRS; do
     done
   else
     # Copy new config if directory does not exist
-    cp -r config/"$DIR2" ~/.config/"$DIR2" 2>&1 | tee -a "$LOG"
-    if [ $? -eq 0 ]; then
-      echo "${OK} - Copy completed for ${YELLOW}$DIR2${RESET}" 2>&1 | tee -a "$LOG"
-    else
-      echo "${ERROR} - Failed to copy ${YELLOW}$DIR2${RESET}" 2>&1 | tee -a "$LOG"
-      exit 1
-    fi
+    cp -r "config/$DIR2" "$HOME/.config/$DIR2" 2>&1 | tee -a "$LOG"
+    echo -e "${OK} - Copy completed for ${YELLOW}$DIR2${RESET}" 2>&1 | tee -a "$LOG"
   fi
 done
+
+printf "\n%.0s" {1..1}
+
+# for waybar special part since it contains symlink
+DIRW="waybar"
+DIRPATHw="$HOME/.config/$DIRW"
+if [ -d "$DIRPATHw" ]; then
+    while true; do
+        read -p "${CAT} Do you want to replace ${YELLOW}$DIRW${RESET} config? (y/n): " DIR1_CHOICE
+        case "$DIR1_CHOICE" in
+            [Yy]* )
+                BACKUP_DIR=$(get_backup_dirname)
+
+                # Backup the existing directory
+                cp -r "$DIRPATHw" "$DIRPATHw-backup-$BACKUP_DIR" 2>&1 | tee -a "$LOG"
+                echo -e "${NOTE} - Backed up $DIRW to $DIRPATHw-backup-$BACKUP_DIR." 2>&1 | tee -a "$LOG"
+
+                rm -rf "$DIRPATHw" && cp -r "config/$DIRW" "$DIRPATHw" 2>&1 | tee -a "$LOG"
+
+                for file in "config" "style.css"; do
+                    symlink="$DIRPATHw-backup-$BACKUP_DIR/$file"
+                    target_file="$DIRPATHw/$file"
+
+                    if [ -L "$symlink" ]; then
+                        symlink_target=$(readlink "$symlink")
+                        if [ -f "$symlink_target" ]; then
+                            rm -f "$target_file" &&  cp -f "$symlink_target" "$target_file"
+                            echo -e "${NOTE} - Copied $file as a regular file."
+                        else
+                            echo -e "${WARN} - Symlink target for $file does not exist."
+                        fi
+                    fi
+                done  
+
+                for file in "$DIRPATHw-backup-$BACKUP_DIR/configs"/*; do
+                    [ -e "$file" ] || continue  # Skip if no files are found
+                    echo "Copying $file to $HOME/.config/waybar/configs/" >> "$LOG"
+                    cp -n "$file" "$HOME/.config/waybar/configs/"
+                done || true
+
+                for file in "$DIRPATHw-backup-$BACKUP_DIR/style"/*; do
+                    [ -e "$file" ] || continue  # Skip if no files are found
+                    echo "Copying $file to $HOME/.config/waybar/style/" >> "$LOG"
+                    cp -n "$file" "$HOME/.config/waybar/style/"
+                done || true
+
+                break
+                ;;
+            [Nn]* )
+                echo -e "${NOTE} - Skipping ${YELLOW}$DIRW${RESET} config replacement." 2>&1 | tee -a "$LOG"
+                break
+                ;;
+            * )
+                echo -e "${WARN} - Invalid choice. Please enter Y or N."
+                ;;
+        esac
+    done
+else
+    cp -r "config/$DIRW" "$DIRPATHw" 2>&1 | tee -a "$LOG"
+    echo -e "${OK} - Copy completed for ${YELLOW}$DIRW${RESET}" 2>&1 | tee -a "$LOG"
+fi
 
 printf "\n%.0s" {1..1}
 
@@ -485,20 +585,10 @@ if [ ! -d "config" ]; then
   exit 1
 fi
 
-DIR="
-  btop
-  cava
-  hypr
-  Kvantum
-  qt5ct
-  qt6ct
-  swappy
-  wallust
-  wlogout
-"
+DIR="btop cava hypr Kvantum qt5ct qt6ct swappy wallust wlogout"
 
 for DIR_NAME in $DIR; do
-  DIRPATH=~/.config/"$DIR_NAME"
+  DIRPATH="$HOME/.config/$DIR_NAME"
   
   # Backup the existing directory if it exists
   if [ -d "$DIRPATH" ]; then
@@ -517,7 +607,7 @@ for DIR_NAME in $DIR; do
   
   # Copy the new config
   if [ -d "config/$DIR_NAME" ]; then
-    cp -r "config/$DIR_NAME/" ~/.config/"$DIR_NAME" 2>&1 | tee -a "$LOG"
+    cp -r "config/$DIR_NAME/" "$HOME/.config/$DIR_NAME" 2>&1 | tee -a "$LOG"
     if [ $? -eq 0 ]; then
       echo "${OK} - Copy of config for ${YELLOW}$DIR_NAME${RESET} completed!"
     else
@@ -529,7 +619,41 @@ for DIR_NAME in $DIR; do
   fi
 done
 
-printf "\n%.0s" {1..2}
+printf "\n%.0s" {1..1}
+
+# Restore automatically Animations and Monitor-Profiles
+# including monitors.conf and workspaces.conf
+HYPR_DIR="$HOME/.config/hypr"
+BACKUP_DIR=$(get_backup_dirname)
+BACKUP_HYPR_PATH="$HYPR_DIR-backup-$BACKUP_DIR"
+
+if [ -d "$BACKUP_HYPR_PATH" ]; then
+  echo -e "\n${NOTE} Restoring ${SKY_BLUE}Animations & Monitor Profiles${RESET} directories into ${YELLOW}$HYPR_DIR${RESET}..."
+  
+  DIR_B=("Monitor_Profiles" "animations" "wallpaper_effects")
+  # Restore directories automatically 
+  for DIR_RESTORE in "${DIR_B[@]}"; do
+    BACKUP_SUBDIR="$BACKUP_HYPR_PATH/$DIR_RESTORE"
+    
+    if [ -d "$BACKUP_SUBDIR" ]; then
+      cp -r "$BACKUP_SUBDIR" "$HYPR_DIR/" 
+      echo "${OK} - Restored directory: ${MAGENTA}$DIR_RESTORE${RESET}" 2>&1 | tee -a "$LOG"
+    fi
+  done
+
+  # Restore files automatically
+  FILE_B=("monitors.conf" "workspaces.conf" "pyprland.toml")
+  for FILE_RESTORE in "${FILE_B[@]}"; do
+    BACKUP_FILE="$BACKUP_HYPR_PATH/$FILE_RESTORE"
+
+    if [ -f "$BACKUP_FILE" ]; then
+      cp "$BACKUP_FILE" "$HYPR_DIR/$FILE_RESTORE" 
+      echo "${OK} - Restored file: ${MAGENTA}$FILE_RESTORE${RESET}" 2>&1 | tee -a "$LOG"
+    fi
+  done
+fi
+
+printf "\n%.0s" {1..1}
 
 # Restoring UserConfigs and UserScripts
 DIRH="hypr"
@@ -537,17 +661,15 @@ FILES_TO_RESTORE=(
   "ENVariables.conf"
   "LaptopDisplay.conf"
   "Laptops.conf"
-  "Monitors.conf"
   "Startup_Apps.conf"
   "UserDecorations.conf"
   "UserAnimations.conf"
   "UserKeybinds.conf"
   "UserSettings.conf"
   "WindowRules.conf"
-  "WorkspaceRules.conf"
 )
 
-DIRPATH=~/.config/"$DIRH"
+DIRPATH="$HOME/.config/$DIRH"
 BACKUP_DIR=$(get_backup_dirname)
 BACKUP_DIR_PATH="$DIRPATH-backup-$BACKUP_DIR/UserConfigs"
 
@@ -580,7 +702,7 @@ if [ -d "$BACKUP_DIR_PATH" ]; then
   done
 fi
 
-printf "\n%.0s" {1..2}
+printf "\n%.0s" {1..1}
 
 # Restoring previous UserScripts
 DIRSH="hypr"
@@ -590,14 +712,14 @@ SCRIPTS_TO_RESTORE=(
   "Weather.sh"
 )
 
-DIRSHPATH=~/.config/"$DIRSH"
-BACKUP_DIR_PATH="$DIRSHPATH-backup-$BACKUP_DIR/UserScripts"
+DIRSHPATH="$HOME/.config/$DIRSH"
+BACKUP_DIR_PATH_S="$DIRSHPATH-backup-$BACKUP_DIR/UserScripts"
 
-if [ -d "$BACKUP_DIR_PATH" ]; then
+if [ -d "$BACKUP_DIR_PATH_S" ]; then
   echo -e "${NOTE} Restoring previous ${MAGENTA}User-Scripts${RESET}..."
 
   for SCRIPT_NAME in "${SCRIPTS_TO_RESTORE[@]}"; do
-    BACKUP_SCRIPT="$BACKUP_DIR_PATH/$SCRIPT_NAME"
+    BACKUP_SCRIPT="$BACKUP_DIR_PATH_S/$SCRIPT_NAME"
 
     if [ -f "$BACKUP_SCRIPT" ]; then
       printf "\n${INFO} Found ${YELLOW}$SCRIPT_NAME${RESET} in hypr backup...\n"
@@ -615,21 +737,78 @@ if [ -d "$BACKUP_DIR_PATH" ]; then
   done
 fi
 
-printf "\n%.0s" {1..}
+printf "\n%.0s" {1..1}
+
+# restoring some files in ~/.config/hypr
+DIR_H="hypr"
+FILES_2_RESTORE=(
+  "hyprlock.conf"
+  "hypridle.conf"
+)
+
+DIRPATH="$HOME/.config/$DIR_H"
+BACKUP_DIR=$(get_backup_dirname)
+BACKUP_DIR_PATH_F="$DIRPATH-backup-$BACKUP_DIR"
+
+if [ -d "$BACKUP_DIR_PATH_F" ]; then
+  echo -e "${NOTE} Restoring some files in ${MAGENTA}$HOME/.config/hypr directory${RESET}..."
+
+  for FILE_RESTORE in "${FILES_2_RESTORE[@]}"; do
+    BACKUP_FILE="$BACKUP_DIR_PATH_F/$FILE_RESTORE"
+  
+    if [ -f "$BACKUP_FILE" ]; then
+      echo -e "\n${INFO} Found ${YELLOW}$FILE_RESTORE${RESET} in hypr backup..."
+      read -p "${CAT} Do you want to restore ${YELLOW}$FILE_RESTORE${RESET} from backup? (y/N): " file2restore
+
+      if [[ "$file2restore" == [Yy]* ]]; then
+        if cp "$BACKUP_FILE" "$DIRPATH/$FILE_RESTORE"; then
+          echo "${OK} - $FILE_RESTORE restored!" 2>&1 | tee -a "$LOG"
+        else
+          echo "${ERROR} - Failed to restore $FILE_RESTORE!" 2>&1 | tee -a "$LOG"
+        fi
+      else
+        echo "${NOTE} - Skipped restoring $FILE_RESTORE."
+      fi
+    else
+      echo "${ERROR} - Backup file $BACKUP_FILE does not exist."
+    fi
+  done
+fi
+
+printf "\n%.0s" {1..1}
+
+# Define the target directory for rofi themes
+rofi_DIR="$HOME/.local/share/rofi/themes"
+
+if [ ! -d "$rofi_DIR" ]; then
+  mkdir -p "$rofi_DIR"
+fi
+if [ -d "$HOME/.config/rofi/themes" ]; then
+  if [ -z "$(ls -A $HOME/.config/rofi/themes)" ]; then
+    echo '/* Dummy Rofi theme */' > "$HOME/.config/rofi/themes/dummy.rasi"
+  fi
+  ln -snf "$HOME/.config/rofi/themes/"* "$HOME/.local/share/rofi/themes/"
+  # Delete the dummy file if it was created
+  if [ -f "$HOME/.config/rofi/themes/dummy.rasi" ]; then
+    rm "$HOME/.config/rofi/themes/dummy.rasi"
+  fi
+fi
+
+printf "\n%.0s" {1..1}
 
 # wallpaper stuff
-mkdir -p ~/Pictures/wallpapers
-if cp -r wallpapers ~/Pictures/; then
+mkdir -p $HOME/Pictures/wallpapers
+if cp -r wallpapers $HOME/Pictures/; then
   echo "${OK} Some ${MAGENTA}wallpapers${RESET} copied successfully!" | tee -a "$LOG"
 else
   echo "${ERROR} Failed to copy some ${YELLOW}wallpapers${RESET}" | tee -a "$LOG"
 fi
  
 # Set some files as executable
-chmod +x ~/.config/hypr/scripts/* 2>&1 | tee -a "$LOG"
-chmod +x ~/.config/hypr/UserScripts/* 2>&1 | tee -a "$LOG"
+chmod +x "$HOME/.config/hypr/scripts/"* 2>&1 | tee -a "$LOG"
+chmod +x "$HOME/.config/hypr/UserScripts/"* 2>&1 | tee -a "$LOG"
 # Set executable for initial-boot.sh
-chmod +x ~/.config/hypr/initial-boot.sh 2>&1 | tee -a "$LOG"
+chmod +x "$HOME/.config/hypr/initial-boot.sh" 2>&1 | tee -a "$LOG"
 
 # Waybar config to symlink & retain based on machine type
 if hostnamectl | grep -q 'Chassis: desktop'; then
@@ -640,7 +819,11 @@ else
     config_remove=""
 fi
 
-ln -sf "$config_file" "$HOME/.config/waybar/config" 2>&1 | tee -a "$LOG" || true
+# Check if ~/.config/waybar/config does not exist or is a symlink
+if [ ! -e "$HOME/.config/waybar/config" ] || [ -L "$HOME/.config/waybar/config" ]; then
+    ln -sf "$config_file" "$HOME/.config/waybar/config" 2>&1 | tee -a "$LOG"
+fi
+
 
 # Remove inappropriate waybar configs
 rm -rf "$HOME/.config/waybar/configs/[TOP] Default$config_remove" \
@@ -650,7 +833,7 @@ rm -rf "$HOME/.config/waybar/configs/[TOP] Default$config_remove" \
        "$HOME/.config/waybar/configs/[TOP] Default$config_remove (old v3)" \
        "$HOME/.config/waybar/configs/[TOP] Default$config_remove (old v4)" 2>&1 | tee -a "$LOG" || true
 
-printf "\n%.0s" {1..2}
+printf "\n%.0s" {1..1}
 
 # for SDDM (sequoia_2)
 sddm_sequioa="/usr/share/sddm/themes/sequoia_2"
@@ -692,12 +875,12 @@ while true; do
           echo "${OK} Wallpapers downloaded successfully." 2>&1 | tee -a "$LOG"
 
           # Check if wallpapers directory exists and create it if not
-          if [ ! -d ~/Pictures/wallpapers ]; then
-              mkdir -p ~/Pictures/wallpapers
+          if [ ! -d "$HOME/Pictures/wallpapers" ]; then
+              mkdir -p "$HOME/Pictures/wallpapers"
               echo "${OK} Created wallpapers directory." 2>&1 | tee -a "$LOG"
           fi
 
-          if cp -R Wallpaper-Bank/wallpapers/* ~/Pictures/wallpapers/ >> "$LOG" 2>&1; then
+          if cp -R Wallpaper-Bank/wallpapers/* "$HOME/Pictures/wallpapers/" >> "$LOG" 2>&1; then
               echo "${OK} Wallpapers copied successfully." 2>&1 | tee -a "$LOG"
               rm -rf Wallpaper-Bank 2>&1 # Remove cloned repository after copying wallpapers
               break
@@ -720,10 +903,10 @@ done
 
 # CLeaning up of ~/.config/ backups
 cleanup_backups() {
-  CONFIG_DIR=~/.config
+  CONFIG_DIR="$HOME/.config"
   BACKUP_PREFIX="-backup"
 
-  # Loop through directories in ~/.config
+  # Loop through directories in $HOME/.config
   for DIR in "$CONFIG_DIR"/*; do
     if [ -d "$DIR" ]; then
       BACKUP_DIRS=()
@@ -772,18 +955,20 @@ cleanup_backups() {
 # Execute the cleanup function
 cleanup_backups
 
-# symlinks for waybar style
-ln -sf "$waybar_style" "$HOME/.config/waybar/style.css" && \
+# Check if ~/.config/waybar/style.css does not exist or is a symlink
+if [ ! -e "$HOME/.config/waybar/style.css" ] || [ -L "$HOME/.config/waybar/style.css" ]; then
+    ln -sf "$waybar_style" "$HOME/.config/waybar/style.css" 2>&1 | tee -a "$LOG"
+fi
 
-printf "\n%.0s" {1..2}
+printf "\n%.0s" {1..1}
 
 # initialize wallust to avoid config error on hyprland
 wallust run -s $wallpaper 2>&1 | tee -a "$LOG"
 
 printf "\n%.0s" {1..2}
 printf "${OK} GREAT! KooL's Hyprland-Dots is now Loaded & Ready !!! "
-printf "\n%.0s" {1..2}
+printf "\n%.0s" {1..1}
 printf "${INFO} However, it is ${MAGENTA}HIGHLY SUGGESTED${RESET} to logout and re-login or better reboot to avoid any issues"
-printf "\n%.0s" {1..2}
+printf "\n%.0s" {1..1}
 printf "${SKY_BLUE}Thank you${RESET} for using ${MAGENTA}KooL's Hyprland Configuration${RESET}... ${YELLOW}ENJOY!!!${RESET}"
 printf "\n%.0s" {1..3}

@@ -1,22 +1,20 @@
 /* ---- 💫 https://github.com/JaKooLit 💫 ---- */
-/* Master Config 1080p*/
+/* KooL Hyprland Rofi Style 3 - Full screen v1 */
 
 /* ---- Configuration ---- */
 
 configuration {
-    font:                       "JetBrainsMono Nerd Font SemiBold 12";
     modi:                       "drun,run,filebrowser";
     show-icons:                 true;
-    display-drun:               "Apps";
-    display-run:                "Run";
-    display-filebrowser:        "Files";
-    display-window:             "Windows";
+    display-drun:               "  apps";
+    display-run:                "  term";
+    display-filebrowser:        "  files";
+    display-window:             "  window";
     drun-display-format:        "{name}";
+    window-format:              "{w} · {c} · {t}";
     hover-select:               true;
     me-select-entry:            "MouseSecondary";
     me-accept-entry:            "MousePrimary";
-    window-format:              "{w} · {c} · {t}";
-    dpi:						1;
 }
 
 /* ---- Load wallust colors ---- */
@@ -35,11 +33,29 @@ configuration {
     border-color:                @selected;
 }
 
+/*****-- Elements Font Size -----*****/
+element-text {
+  font: "JetBrainsMono Nerd Font SemiBold 13";
+}
+
+/* ---- Global Properties ---- */
+* {
+	main-bg:            @background;
+    main-fg:            @foreground;
+    main-br:            @color12;
+    main-ex:            @color11;
+    select-bg:          @foreground;
+    select-fg:          @background;
+    separatorcolor:     transparent;
+    border-color:       transparent;
+}
+
+
 /* ---- Window ---- */
 window {
     // Default
     enabled:                    true;
-    fullscreen:                 false;
+    fullscreen:                 true;
     transparency:               "real";
     cursor:                     "default";
     spacing:                    0px;
@@ -49,7 +65,6 @@ window {
     anchor:                     center;
 
     // Style Values
-    width:                      50%;
     background-color:           @background;
 }
 
@@ -69,7 +84,7 @@ inputbar {
     padding:                     10px 10px 50px 10px;
     margin:                      10px;
     background-color:            transparent;
-    border-radius:               25px;
+    border-radius:               20px;
     orientation:                 horizontal;
     children:                    ["entry", "dummy", "mode-switcher" ];
     background-image:            url("~/.config/rofi/.current_wallpaper", width);
@@ -85,7 +100,7 @@ entry {
     background-color:            @selected;
     text-color:                  @text-selected;
     cursor:                      text;
-    placeholder:                 " 🖥️ Search "; // << Search symbol
+    placeholder:                 " 🖥️ Search ";
     placeholder-color:           inherit;
 }
 
@@ -101,17 +116,18 @@ listbox {
 /* ---- Listview ---- */
 listview {
     enabled:                     true;
-    columns:                     2;
-    lines:                       6;
+    columns:                     5;
+    lines:                       5;
     cycle:                       true;
     dynamic:                     true;
     scrollbar:                   true;
     layout:                      vertical;
     reverse:                     false;
-    fixed-height:                false;
+    fixed-height:                true;
     fixed-columns:               true;    
     spacing:                     10px;
     background-color:            transparent;
+    margin: 					 10px;
 
 //  Adapt rofi theme
     border:                      0px;
@@ -144,17 +160,18 @@ button selected {
 
 /* ---- Scrollbar ---- */
 scrollbar {
-    border:       				0;
+    border:       				0px;
     handle-color: 				@background-alt;
     handle-width: 				2px ;
-    padding:      				0;
+    padding:      				0px;
 }
 
 /* ---- Elements ---- */
 element {
     enabled:                     true;
-    spacing:                     10px;
+    orientation: 				 vertical;
   	padding: 					 10px;
+  	spacing: 					 10px;
     border-radius:               12px;
     background-color:            transparent;
     cursor:                      pointer;
@@ -164,10 +181,12 @@ element normal.normal {
     background-color:            inherit;
     text-color:                  inherit;
 }
+
 element normal.urgent {
     background-color:            @urgent;
     text-color:                  @foreground;
 }
+
 element normal.active {
     background-color:            @active;
     text-color:                  @foreground;
@@ -203,17 +222,17 @@ element alternate.active {
     text-color:                  inherit;
 }
 element-icon {
+  	size: 						 5%;
     background-color:            transparent;
     text-color:                  inherit;
     cursor:                      inherit;
 }
 element-text {
-    font:						"JetBrainsMono Nerd Font SemiBold 12";
     background-color:            transparent;
     text-color:                  inherit;
     cursor:                      inherit;
     vertical-align:              0.5;
-    horizontal-align:            0.0;
+    horizontal-align:            0.5;
 }
 
 /* ---- Message ---- */
@@ -222,12 +241,13 @@ message {
     border:                      0px;
 }
 textbox {
+    margin: 					 10px;
     padding:                     12px;
     border-radius:               10px;
-    background-color:            @background-alt;
+    background-color:            @selected;
     text-color:                  @background;
     vertical-align:              0.5;
-    horizontal-align:            0.0;
+    horizontal-align:            0.5;
 }
 error-message {
     padding:                     12px;
