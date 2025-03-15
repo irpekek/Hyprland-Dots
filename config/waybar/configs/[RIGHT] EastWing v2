@@ -8,6 +8,7 @@
   "$HOME/.config/waybar/ModulesWorkspaces",
   "$HOME/.config/waybar/ModulesCustom",
   "$HOME/.config/waybar/ModulesGroups",
+  "$HOME/.config/waybar/UserModules",
   "$HOME/.config/waybar/ModulesVertical",
   ],
 "layer": "top",
@@ -23,12 +24,13 @@
   
 "modules-left": [
 	"group/notify",	
-    "clock#vertical",
+  "clock#vertical",
     
 	"custom/menu",
 ],
 
 "modules-center": [
+	"idle_inhibitor",
 	"hyprland/workspaces#numbers",
 ],
 

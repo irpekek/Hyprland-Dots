@@ -8,23 +8,31 @@ wallDIR="$HOME/Pictures/wallpapers"
 SCRIPTSDIR="$HOME/.config/hypr/scripts"
 wallpaper_current="$HOME/.config/hypr/wallpaper_effects/.wallpaper_current"
 
-rofi_override="element-icon{size:${icon_size}px;}"
-
 # Directory for swaync
 iDIR="$HOME/.config/swaync/images"
 iDIRi="$HOME/.config/swaync/icons"
+
+# Check if package bc exists
+if ! command -v bc &>/dev/null; then
+notify-send -i "$iDIR/ja.png" "bc missing" "Install package bc first"
+exit 1
+fi
 
 # variables
 rofi_theme="$HOME/.config/rofi/config-wallpaper.rasi"
 focused_monitor=$(hyprctl monitors -j | jq -r '.[] | select(.focused) | .name')
 
-# Get monitor width and DPI
-monitor_width=$(hyprctl monitors -j | jq -r --arg mon "$focused_monitor" '.[] | select(.name == $mon) | .width')
+# Monitor details
 scale_factor=$(hyprctl monitors -j | jq -r --arg mon "$focused_monitor" '.[] | select(.name == $mon) | .scale')
+monitor_height=$(hyprctl monitors -j | jq -r --arg mon "$focused_monitor" '.[] | select(.name == $mon) | .height')
 
-icon_size=$(echo "scale=1; ($monitor_width * 3) / ($scale_factor * 400)" | bc)
+icon_size=$(echo "scale=1; ($monitor_height * 3) / ($scale_factor * 150)" | bc)
 
-rofi_override="element-icon{size:${icon_size}%;}"
+# Apply limit
+adjusted_icon_size=$(echo "$icon_size" | awk '{if ($1 < 15) $1 = 20; if ($1 > 25) $1 = 25; print $1}')
+
+# Setting the rofi override with the adjusted icon size
+rofi_override="element-icon{size:${adjusted_icon_size}%;}"
 
 # swww transition config
 FPS=60
@@ -130,7 +138,20 @@ sleep 1
 if [[ -n "$choice" ]]; then
   sddm_sequoia="/usr/share/sddm/themes/sequoia_2"
   if [ -d "$sddm_sequoia" ]; then
-    if yad --question --text="Set wallpaper as SDDM background?\nNOTE: This only applies to SEQUOIA SDDM Theme" --title="SDDM Background" --ok-label="Yes"; then
+  
+	# Check if yad is running to avoid multiple yad notification
+	if pidof yad > /dev/null; then
+	  killall yad
+	fi
+    
+    if yad --info --text="Set current wallpaper as SDDM background?\n\nNOTE: This only applies to SEQUOIA SDDM Theme" \
+    --text-align=left \
+    --title="SDDM Background" \
+    --timeout=5 \
+    --timeout-indicator=right \
+    --button="yad-yes:0" \
+    --button="yad-no:1" \
+    ; then
 
     # Check if terminal exists
     if ! command -v "$terminal" &>/dev/null; then

@@ -2,9 +2,13 @@
 # /* ---- 💫 https://github.com/JaKooLit 💫 ---- */  ##
 # Rofi menu for KooL Hyprland Quick Settings (SUPER SHIFT E)
 
-# Define preferred text editor and terminal
-edit=${EDITOR:-nano}
-tty=kitty
+# Modify this config file for default terminal and EDITOR
+config_file="$HOME/.config/hypr/UserConfigs/01-UserDefaults.conf"
+
+tmp_config_file=$(mktemp)
+sed 's/^\$//g; s/ = /=/g' "$config_file" > "$tmp_config_file"
+source "$tmp_config_file"
+# ##################################### #
 
 # variables
 configs="$HOME/.config/hypr/configs"
@@ -18,6 +22,7 @@ UserScripts="$HOME/.config/hypr/UserScripts"
 # Function to display the menu options without numbers
 menu() {
     cat <<EOF
+view/edit User Defaults
 view/edit ENV variables
 view/edit Window Rules
 view/edit User Keybinds
@@ -33,6 +38,8 @@ Choose Hyprland Animations
 Choose Monitor Profiles
 Choose Rofi Themes
 Search for Keybinds
+Toggle Game Mode
+Switch Dark-Light Theme
 EOF
 }
 
@@ -42,6 +49,7 @@ main() {
     
     # Map choices to corresponding files
     case "$choice" in
+    	"view/edit User Defaults") file="$UserConfigs/01-UserDefaults.conf" ;;
         "view/edit ENV variables") file="$UserConfigs/ENVariables.conf" ;;
         "view/edit Window Rules") file="$UserConfigs/WindowRules.conf" ;;
         "view/edit User Keybinds") file="$UserConfigs/UserKeybinds.conf" ;;
@@ -67,12 +75,14 @@ main() {
         "Choose Monitor Profiles") $scriptsDir/MonitorProfiles.sh ;;
         "Choose Rofi Themes") $scriptsDir/RofiThemeSelector.sh ;;
         "Search for Keybinds") $scriptsDir/KeyBinds.sh ;;
+        "Toggle Game Mode") $scriptsDir/GameMode.sh ;;
+        "Switch Dark-Light Theme") $scriptsDir/DarkLight.sh ;;
         *) return ;;  # Do nothing for invalid choices
     esac
 
     # Open the selected file in the terminal with the text editor
     if [ -n "$file" ]; then
-        $tty -e $edit "$file"
+        $term -e $edit "$file"
     fi
 }
 
