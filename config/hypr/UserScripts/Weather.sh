@@ -1,9 +1,9 @@
 #!/bin/bash
 # /* ---- 💫 https://github.com/JaKooLit 💫 ---- */  ##
 # weather info from wttr. https://github.com/chubin/wttr.in
-# Remember to add city 
+# Remember to add city
 
-city=
+city=jakarta
 cachedir="~/.cache/rbn"
 cachefile=${0##*/}-$1
 
@@ -51,10 +51,10 @@ case $(echo ${weather[1]##*,} | tr '[:upper:]' '[:lower:]') in
 "overcast")
     condition=""
     ;;
-"fog" | "freezing fog")
+"fog" | "freezing fog" | "haze")
     condition=""
     ;;
-"patchy rain possible" | "patchy light drizzle" | "light drizzle" | "patchy light rain" | "light rain" | "light rain shower" | "mist" | "rain")
+"patchy rain possible"| "patchy rain nearby" | "patchy light drizzle" | "light drizzle" | "patchy light rain" | "light rain" | "light rain shower" | "mist" | "rain")
     condition="󰼳"
     ;;
 "moderate rain at times" | "moderate rain" | "heavy rain at times" | "heavy rain" | "moderate or heavy rain shower" | "torrential rain shower" | "rain shower")
@@ -69,7 +69,7 @@ case $(echo ${weather[1]##*,} | tr '[:upper:]' '[:lower:]') in
 "blizzard" | "patchy moderate snow" | "moderate snow" | "patchy heavy snow" | "heavy snow" | "moderate or heavy snow with thunder" | "moderate or heavy snow showers")
     condition=""
     ;;
-"thundery outbreaks possible" | "patchy light rain with thunder" | "moderate or heavy rain with thunder" | "patchy light snow with thunder")
+"thundery outbreaks possible" | "patchy light rain with thunder" | "moderate or heavy rain with thunder" | "patchy light snow with thunder" | "Thunderstorm in vicinity")
     condition=""
     ;;
 *)
