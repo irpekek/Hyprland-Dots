@@ -194,23 +194,25 @@
 		"class<tor browser>": " ",
 		"class<firefox-developer-edition>": "🦊 ",
 
-		"class<kitty|konsole>": " ",
+		"class<kitty|konsole|[Aa]lacritty>": " ",
 		"class<kitty-dropterm>": " ",
 		"class<com.mitchellh.ghostty>": " ",
 		"class<org.wezfurlong.wezterm>": " ",
+		"class<Warp|warp|dev.warp.Warp|warp-terminal>": "󰰭 ",
 
 		"class<[Tt]hunderbird|[Tt]hunderbird-esr>": " ",
 		"class<eu.betterbird.Betterbird>": " ",
 		"title<.*gmail.*>": "󰊫 ",
 
 		"class<[Tt]elegram-desktop|org.telegram.desktop|io.github.tdesktop_x64.TDesktop>": " ",
-		"class<discord|[Ww]ebcord|Vesktop>": " ",
+		"class<discord|discord-canary|[Ww]ebcord|[Vv]esktop|com.discordapp.Discord|dev.vencord.Vesktop>": " ",
+		"class<[Ss]ignal|signal-desktop|org.signal.Signal>": "󰍩 ",
+		"title<.*Signal.*>": "󰍩 ",
 		"title<.*whatsapp.*>": " ",
 		"title<.*zapzap.*>": " ",
 		"title<.*messenger.*>": " ",
 		"title<.*facebook.*>": " ",
-		"title<.*reddit.*>": " ",
-
+		"title<.*Discord.*>": " ",
 
 		"title<.*ChatGPT.*>": "󰚩 ",
 		"title<.*deepseek.*>": "󰚩 ",
@@ -224,6 +226,8 @@
 		"title<.*Picture-in-Picture.*>": " ",
 		"title<.*youtube.*>": " ",
 		"class<vlc>": "󰕼 ",
+		"class<[Kk]denlive|org.kde.kdenlive>": "🎬 ",
+		"title<.*Kdenlive.*>": "🎬 ",
 		"title<.*cmus.*>": " ",
 		"class<[Ss]potify>": " ",
 		"class<Plex>": "󰚺 ",
@@ -231,11 +235,12 @@
 
 		"class<virt-manager>": " ",
 		"class<.virt-manager-wrapped>": " ",
+		"class<remote-viewer|virt-viewer>": " ",
 		"class<virtualbox manager>": "💽 ",
 		"title<virtualbox>": "💽 ",
-		"class<remmina>": "🖥️ ",
+		"class<remmina|org.remmina.Remmina>": "🖥️ ",
 
-		"class<VSCode|code-url-handler|code-oss|codium|codium-url-handler|VSCodium>": "󰨞 ",
+		"class<VSCode|code|code-url-handler|code-oss|codium|codium-url-handler|VSCodium>": "󰨞 ",
 		"class<dev.zed.Zed>": "󰵁",
 		"class<codeblocks>": "󰅩 ",
 		"title<.*github.*>": " ",
@@ -254,6 +259,7 @@
 
 		"class<polkit-gnome-authentication-agent-1>": "󰒃 ",
 		"class<nwg-look>": " ",
+		"class<nwg-displays>": " ",
 		"class<[Pp]avucontrol|org.pulseaudio.pavucontrol>": "󱡫 ",
 		"class<steam>": " ",
 		"class<thunar|nemo>": "󰝰 ",
@@ -264,6 +270,29 @@
 		"class<org.pipewire.Helvum>": "󰓃",
 		"class<localsend>":"",
 		"class<PrusaSlicer|UltiMaker-Cura|OrcaSlicer>": "󰹛",
+
+		"class<io.github.kolunmi.Bazaar>": " ",
+		"title<^Bazaar$>": " ",
+
+		"class<com.gabm.satty>": " ",
+		"title<^satty$>": " ",
+
+		"class<[Bb]ox[Bb]uddy|io.github.dvlv.boxbuddy|io.github.dvlv.BoxBuddy>": " ",
+		"title<.*BoxBuddy.*>": " ",
+
+		"title<Hyprland Keybinds>": " ",
+		"title<Niri Keybinds>": " ",
+		"title<BSPWM Keybinds>": " ",
+		"title<DWM Keybinds>": " ",
+		"title<Emacs Leader Keybinds>": " ",
+		"title<Kitty Configuration>": " ",
+		"title<WezTerm Configuration>": " ",
+		"title<Yazi Configuration>": " ",
+		"title<Cheatsheets Viewer>": " ",
+		"title<Documentation Viewer>": " ",
+		"title<^Wallpapers$>": " ",
+		"title<^Video Wallpapers$>": " ",
+		"title<^qs-wlogout$>": " ",
 		}
 	},
 }
