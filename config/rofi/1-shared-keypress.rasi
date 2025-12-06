@@ -1,0 +1,6 @@
+configuration {
+ me-select-entry: "";
+ me-accept-entry: "!MousePrimary"; 
+ kb-cancel: "MousePrimary";
+ hover-select: true;
+}
